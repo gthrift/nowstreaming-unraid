@@ -4,7 +4,7 @@
 <!ENTITY author    "gthrift">
 <!ENTITY version   "2026.01.06">
 <!ENTITY launch    "Settings/ActiveStreamsSettings">
-<!ENTITY gitURL    "https://raw.githubusercontent.com/gthrift/activestreams-unraid/master">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/gthrift/activestreams-unraid/main">
 <!ENTITY pluginURL "&gitURL;/activestreams.plg">
 <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
