@@ -1,0 +1,136 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "activestreams">
+<!ENTITY author    "gthrift">
+<!ENTITY version   "2026.01.06">
+<!ENTITY launch    "Settings/ActiveStreamsSettings">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/gthrift/unraid-activestreams/master">
+<!ENTITY pluginURL "&gitURL;/activestreams.plg">
+<!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
+<!ENTITY plgPATH   "/boot/config/plugins/&name;">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="streams.png">
+
+<CHANGES>
+###2026.01.06
+- Complete rewrite: Renamed to Active Streams
+- Added support for Plex, Emby, and Jellyfin servers
+- Support for multiple server instances
+- Customizable widget icon (Plex, Emby, Jellyfin, or generic)
+- Customizable widget title
+- Progress display showing current time/total duration
+- Improved responsive design
+</CHANGES>
+
+<OVERVIEW>
+A plugin to create a dashboard widget that shows your active streams from Plex, Emby, and Jellyfin servers
+</OVERVIEW>
+
+<FILE Name="&emhttp;/ActiveStreamsSettings.page">
+<URL>&gitURL;/src/ActiveStreamsSettings.page</URL>
+</FILE>
+
+<FILE Name="&emhttp;/ActiveStreams.page">
+<URL>&gitURL;/src/ActiveStreams.page</URL>
+</FILE>
+
+<FILE Name="&emhttp;/activestreams_api.php">
+<URL>&gitURL;/src/activestreams_api.php</URL>
+</FILE>
+
+<FILE Name="&emhttp;/activestreams_servers.php">
+<URL>&gitURL;/src/activestreams_servers.php</URL>
+</FILE>
+
+<FILE Name="&emhttp;/streams.png">
+<URL>&gitURL;/metadata/streams.png</URL>
+</FILE>
+
+<FILE Name="&emhttp;/plex.png">
+<URL>&gitURL;/metadata/plex.png</URL>
+</FILE>
+
+<FILE Name="&emhttp;/emby.png">
+<URL>&gitURL;/metadata/emby.png</URL>
+</FILE>
+
+<FILE Name="&emhttp;/jellyfin.png">
+<URL>&gitURL;/metadata/jellyfin.png</URL>
+</FILE>
+
+<FILE Run="/bin/bash">
+<INLINE>
+# 1. Create Config Directory
+mkdir -p "&plgPATH;"
+
+# 2. Set Default Config if missing
+if [ ! -f "&plgPATH;/activestreams.cfg" ]; then
+    echo "POLL_INTERVAL='5'" &gt; "&plgPATH;/activestreams.cfg"
+    echo "DISPLAY_WIDGET='1'" &gt;&gt; "&plgPATH;/activestreams.cfg"
+    echo "WIDGET_ICON='streams'" &gt;&gt; "&plgPATH;/activestreams.cfg"
+    echo "WIDGET_TITLE='Active Streams'" &gt;&gt; "&plgPATH;/activestreams.cfg"
+fi
+
+# 3. Create empty servers config if missing
+if [ ! -f "&plgPATH;/servers.json" ]; then
+    echo "[]" &gt; "&plgPATH;/servers.json"
+fi
+
+# 4. Fix Permissions
+chmod -R 777 "&emhttp;"
+chmod -R 777 "&plgPATH;"
+
+# 5. TOGGLE LOGIC
+CFG_FILE="&plgPATH;/activestreams.cfg"
+WIDGET_FILE="&emhttp;/ActiveStreams.page"
+
+# Load the config directly into Bash
+if [ -f "$CFG_FILE" ]; then
+    source "$CFG_FILE"
+fi
+
+# Default to 1 if the variable didn't load
+DISPLAY_WIDGET="${DISPLAY_WIDGET:-1}"
+
+# Rename logic
+if [ "$DISPLAY_WIDGET" == "0" ]; then
+    if [ -f "$WIDGET_FILE" ]; then
+        mv "$WIDGET_FILE" "$WIDGET_FILE.off"
+    fi
+else
+    if [ -f "$WIDGET_FILE.off" ]; then
+        mv "$WIDGET_FILE.off" "$WIDGET_FILE"
+    fi
+fi
+
+echo ""
+echo "-----------------------------------------------------------"
+echo " &name; has been installed."
+echo " Version: &version;"
+echo "-----------------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+echo "Uninstalling &name;..."
+
+# Remove Plugin Files
+rm -rf "&emhttp;"
+
+# Remove the PLG file itself
+rm -f "&plgPATH;/&name;.plg"
+removepkg "&plgPATH;/*.txz"
+
+echo ""
+echo "-----------------------------------------------------------"
+echo " &name; has been uninstalled."
+echo " Version: &version;"
+echo "-----------------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+
+</PLUGIN>
