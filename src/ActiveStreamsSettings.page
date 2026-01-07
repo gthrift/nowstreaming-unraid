@@ -36,29 +36,144 @@ Tag="film"
     .as-btn-primary { background: #ff9800; color: #000; }
     .as-btn-danger { background: #d44; color: #fff; }
     .as-btn-secondary { background: #555; color: #fff; }
-    .as-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; }
+    
+    /* Modal Overlay */
+    .as-modal { 
+        display: none; 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%; 
+        background: rgba(0,0,0,0.8); 
+        z-index: 1000; 
+    }
+    
+    /* Modal Content Box */
     .as-modal-content { 
         position: absolute; 
         top: 50%; 
         left: 50%; 
         transform: translate(-50%, -50%); 
-        background: #1c1c1c; 
+        background: #2a2a2a; 
         padding: 25px; 
         border-radius: 10px; 
-        min-width: 400px;
+        min-width: 450px;
         max-width: 90%;
+        border: 1px solid #444;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     }
-    .as-modal-content h3 { margin-top: 0; }
-    .as-form-row { margin: 15px 0; }
-    .as-form-row label { display: block; margin-bottom: 5px; font-weight: bold; }
-    .as-form-row input, .as-form-row select { width: 100%; padding: 8px; box-sizing: border-box; }
-    .as-form-row .hint { font-size: 12px; color: #888; margin-top: 5px; }
+    .as-modal-content h3 { 
+        margin-top: 0; 
+        color: #ff9800;
+        border-bottom: 1px solid #444;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+    }
+    
+    /* Form Rows */
+    .as-form-row { margin: 18px 0; }
+    .as-form-row label { 
+        display: block; 
+        margin-bottom: 8px; 
+        font-weight: bold; 
+        color: #e0e0e0;
+        font-size: 14px;
+    }
+    
+    /* Input Fields - High Contrast */
+    .as-form-row input[type="text"],
+    .as-form-row input[type="number"],
+    .as-form-row input[type="password"],
+    .as-form-row select {
+        width: 100%; 
+        padding: 10px 12px; 
+        box-sizing: border-box;
+        background: #1a1a1a;
+        border: 1px solid #555;
+        border-radius: 4px;
+        color: #ffffff;
+        font-size: 14px;
+    }
+    
+    .as-form-row input[type="text"]:focus,
+    .as-form-row input[type="number"]:focus,
+    .as-form-row input[type="password"]:focus,
+    .as-form-row select:focus {
+        border-color: #ff9800;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.2);
+    }
+    
+    .as-form-row input::placeholder {
+        color: #666;
+    }
+    
+    /* Checkbox styling */
+    .as-form-row input[type="checkbox"] {
+        width: auto;
+        margin-right: 8px;
+        transform: scale(1.2);
+    }
+    
+    .as-form-row .hint { 
+        font-size: 12px; 
+        color: #888; 
+        margin-top: 6px;
+        line-height: 1.4;
+    }
+    
+    /* Server Type Colors */
     .type-plex { color: #e5a00d; }
     .type-emby { color: #52b54b; }
     .type-jellyfin { color: #00a4dc; }
-    .as-test-result { margin-top: 10px; padding: 10px; border-radius: 4px; display: none; }
-    .as-test-success { background: rgba(82, 181, 75, 0.2); color: #52b54b; }
-    .as-test-error { background: rgba(221, 68, 68, 0.2); color: #d44; }
+    
+    /* Test Result Box */
+    .as-test-result { 
+        margin-top: 15px; 
+        padding: 12px 15px; 
+        border-radius: 4px; 
+        display: none;
+        font-size: 14px;
+    }
+    .as-test-success { 
+        background: rgba(82, 181, 75, 0.15); 
+        color: #6fcf6a;
+        border: 1px solid rgba(82, 181, 75, 0.3);
+    }
+    .as-test-error { 
+        background: rgba(221, 68, 68, 0.15); 
+        color: #ff6b6b;
+        border: 1px solid rgba(221, 68, 68, 0.3);
+    }
+    
+    /* Button Row */
+    .as-modal-buttons {
+        display: flex; 
+        gap: 10px; 
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #444;
+    }
+    
+    .as-modal-buttons .as-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    
+    /* Checkbox row special styling */
+    .as-checkbox-row {
+        display: flex;
+        align-items: center;
+        margin: 20px 0;
+    }
+    .as-checkbox-row label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+        cursor: pointer;
+    }
 </style>
 
 <?php
@@ -195,12 +310,12 @@ if ($cfg['DISPLAY_WIDGET'] === '0' && file_exists($pluginPath . 'ActiveStreams.p
             </div>
             
             <div class="as-form-row">
-                <label id="tokenLabel">_(API Token/Key)_:</label>
-                <input type="password" id="serverToken" required>
-                <div class="hint" id="tokenHint">_(Plex: X-Plex-Token from browser. Emby/Jellyfin: API Key from Dashboard > Advanced > API Keys)_</div>
+                <label id="tokenLabel">_(Plex Token)_:</label>
+                <input type="password" id="serverToken" placeholder="Enter your token/API key" required>
+                <div class="hint" id="tokenHint">_(Find your X-Plex-Token in browser dev tools or Plex settings)_</div>
             </div>
             
-            <div class="as-form-row">
+            <div class="as-checkbox-row">
                 <label>
                     <input type="checkbox" id="serverSSL"> _(Use HTTPS/SSL)_
                 </label>
@@ -208,14 +323,14 @@ if ($cfg['DISPLAY_WIDGET'] === '0' && file_exists($pluginPath . 'ActiveStreams.p
             
             <div class="as-test-result" id="testResult"></div>
             
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <div class="as-modal-buttons">
                 <button type="button" class="as-btn as-btn-secondary" onclick="testConnection()">
                     <i class="fa fa-plug"></i> _(Test Connection)_
                 </button>
                 <button type="submit" class="as-btn as-btn-primary">
                     <i class="fa fa-save"></i> _(Save Server)_
                 </button>
-                <button type="button" class="as-btn" onclick="closeModal()">
+                <button type="button" class="as-btn" style="background: #444; color: #ccc;" onclick="closeModal()">
                     _(Cancel)_
                 </button>
             </div>
