@@ -11,15 +11,27 @@ Tag="film"
 <?else:?>
 ---
 <style>
-    .as-section { margin-bottom: 30px; padding: 20px; background: rgba(0,0,0,0.1); border-radius: 8px; }
-    .as-section h3 { margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+    /* Section styling - uses transparent overlays to work with any theme */
+    .as-section { 
+        margin-bottom: 30px; 
+        padding: 20px; 
+        background: rgba(128,128,128,0.1); 
+        border-radius: 8px; 
+    }
+    .as-section h3 { 
+        margin-top: 0; 
+        border-bottom: 1px solid rgba(128,128,128,0.2); 
+        padding-bottom: 10px; 
+    }
+    
+    /* Server list */
     .as-server-list { margin: 15px 0; }
     .as-server-item { 
         display: flex; 
         align-items: center; 
         padding: 10px 15px; 
         margin: 5px 0; 
-        background: rgba(0,0,0,0.2); 
+        background: rgba(128,128,128,0.1); 
         border-radius: 5px; 
         gap: 15px;
     }
@@ -29,13 +41,41 @@ Tag="film"
         text-transform: capitalize;
     }
     .as-server-item .server-name { flex: 1; }
-    .as-server-item .server-host { color: #888; flex: 1; }
+    .as-server-item .server-host { opacity: 0.7; flex: 1; }
     .as-server-item .server-actions { display: flex; gap: 10px; }
-    .as-server-item .server-actions button { padding: 5px 12px; cursor: pointer; }
-    .as-btn { padding: 8px 16px; cursor: pointer; border: none; border-radius: 4px; }
-    .as-btn-primary { background: #ff9800; color: #000; }
-    .as-btn-danger { background: #d44; color: #fff; }
-    .as-btn-secondary { background: #555; color: #fff; }
+    
+    /* Buttons - inherit from Unraid's button styling */
+    .as-btn { 
+        padding: 8px 16px; 
+        cursor: pointer; 
+        border-radius: 4px;
+        border: 1px solid;
+        font-weight: normal;
+    }
+    .as-btn-primary { 
+        background: #ff9800; 
+        color: #000; 
+        border-color: #ff9800;
+    }
+    .as-btn-primary:hover {
+        background: #ffaa2e;
+    }
+    .as-btn-danger { 
+        background: #c53a3a; 
+        color: #fff; 
+        border-color: #c53a3a;
+    }
+    .as-btn-danger:hover {
+        background: #d54a4a;
+    }
+    .as-btn-secondary { 
+        background: rgba(128,128,128,0.3); 
+        color: inherit; 
+        border-color: rgba(128,128,128,0.5);
+    }
+    .as-btn-secondary:hover {
+        background: rgba(128,128,128,0.4);
+    }
     
     /* Modal Overlay */
     .as-modal { 
@@ -45,85 +85,71 @@ Tag="film"
         left: 0; 
         width: 100%; 
         height: 100%; 
-        background: rgba(0,0,0,0.8); 
+        background: rgba(0,0,0,0.7); 
         z-index: 1000; 
     }
     
-    /* Modal Content Box */
+    /* Modal Content - inherit background from body */
     .as-modal-content { 
         position: absolute; 
         top: 50%; 
         left: 50%; 
         transform: translate(-50%, -50%); 
-        background: #2a2a2a; 
+        background: inherit;
+        background-color: var(--background-color, #1c1b1b);
         padding: 25px; 
         border-radius: 10px; 
         min-width: 450px;
         max-width: 90%;
-        border: 1px solid #444;
+        border: 1px solid rgba(128,128,128,0.3);
         box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        color: inherit;
     }
     .as-modal-content h3 { 
         margin-top: 0; 
         color: #ff9800;
-        border-bottom: 1px solid #444;
+        border-bottom: 1px solid rgba(128,128,128,0.3);
         padding-bottom: 15px;
         margin-bottom: 20px;
     }
     
     /* Form Rows */
     .as-form-row { margin: 18px 0; }
-    .as-form-row label { 
+    .as-form-row > label { 
         display: block; 
         margin-bottom: 8px; 
         font-weight: bold; 
-        color: #e0e0e0;
         font-size: 14px;
     }
     
-    /* Input Fields - High Contrast */
-    .as-form-row input[type="text"],
-    .as-form-row input[type="number"],
-    .as-form-row input[type="password"],
-    .as-form-row select {
+    /* 
+     * Input Fields - Let Unraid's default styles apply, just ensure sizing
+     * Unraid already styles input, select elements based on theme
+     */
+    .as-modal-content input[type="text"],
+    .as-modal-content input[type="number"],
+    .as-modal-content input[type="password"],
+    .as-modal-content select {
         width: 100%; 
-        padding: 10px 12px; 
+        padding: 8px 10px; 
         box-sizing: border-box;
-        background: #1a1a1a;
-        border: 1px solid #555;
-        border-radius: 4px;
-        color: #ffffff;
         font-size: 14px;
-    }
-    
-    .as-form-row input[type="text"]:focus,
-    .as-form-row input[type="number"]:focus,
-    .as-form-row input[type="password"]:focus,
-    .as-form-row select:focus {
-        border-color: #ff9800;
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.2);
-    }
-    
-    .as-form-row input::placeholder {
-        color: #666;
     }
     
     /* Checkbox styling */
-    .as-form-row input[type="checkbox"] {
+    .as-modal-content input[type="checkbox"] {
         width: auto;
         margin-right: 8px;
-        transform: scale(1.2);
     }
     
     .as-form-row .hint { 
         font-size: 12px; 
-        color: #888; 
+        opacity: 0.6;
         margin-top: 6px;
         line-height: 1.4;
     }
     
-    /* Server Type Colors */
+    /* Server Type Colors - these are brand colors, keep them */
     .type-plex { color: #e5a00d; }
     .type-emby { color: #52b54b; }
     .type-jellyfin { color: #00a4dc; }
@@ -137,14 +163,14 @@ Tag="film"
         font-size: 14px;
     }
     .as-test-success { 
-        background: rgba(82, 181, 75, 0.15); 
-        color: #6fcf6a;
-        border: 1px solid rgba(82, 181, 75, 0.3);
+        background: rgba(82, 181, 75, 0.2); 
+        color: #5cb85c;
+        border: 1px solid rgba(82, 181, 75, 0.4);
     }
     .as-test-error { 
-        background: rgba(221, 68, 68, 0.15); 
-        color: #ff6b6b;
-        border: 1px solid rgba(221, 68, 68, 0.3);
+        background: rgba(217, 83, 79, 0.2); 
+        color: #d9534f;
+        border: 1px solid rgba(217, 83, 79, 0.4);
     }
     
     /* Button Row */
@@ -153,16 +179,15 @@ Tag="film"
         gap: 10px; 
         margin-top: 25px;
         padding-top: 20px;
-        border-top: 1px solid #444;
+        border-top: 1px solid rgba(128,128,128,0.3);
     }
     
     .as-modal-buttons .as-btn {
         padding: 10px 20px;
         font-size: 14px;
-        font-weight: bold;
     }
     
-    /* Checkbox row special styling */
+    /* Checkbox row */
     .as-checkbox-row {
         display: flex;
         align-items: center;
@@ -173,6 +198,7 @@ Tag="film"
         align-items: center;
         margin-bottom: 0;
         cursor: pointer;
+        font-weight: normal;
     }
 </style>
 
@@ -250,7 +276,7 @@ if ($cfg['DISPLAY_WIDGET'] === '0' && file_exists($pluginPath . 'ActiveStreams.p
     
     <div class="as-server-list" id="serverList">
         <?php if (empty($servers)): ?>
-            <div class="as-server-item" style="justify-content: center; color: #888;">
+            <div class="as-server-item" style="justify-content: center; opacity: 0.7;">
                 <i class="fa fa-info-circle"></i> _(No servers configured. Add one below.)_
             </div>
         <?php else: ?>
@@ -263,15 +289,15 @@ if ($cfg['DISPLAY_WIDGET'] === '0' && file_exists($pluginPath . 'ActiveStreams.p
                     <span class="server-name"><?php echo htmlspecialchars($server['name']); ?></span>
                     <span class="server-host"><?php echo htmlspecialchars($server['host']); ?>:<?php echo htmlspecialchars($server['port']); ?></span>
                     <span class="server-actions">
-                        <button class="as-btn as-btn-secondary" onclick="editServer(<?php echo $index; ?>)"><i class="fa fa-pencil"></i></button>
-                        <button class="as-btn as-btn-danger" onclick="deleteServer(<?php echo $index; ?>)"><i class="fa fa-trash"></i></button>
+                        <button type="button" class="as-btn as-btn-secondary" onclick="editServer(<?php echo $index; ?>)"><i class="fa fa-pencil"></i></button>
+                        <button type="button" class="as-btn as-btn-danger" onclick="deleteServer(<?php echo $index; ?>)"><i class="fa fa-trash"></i></button>
                     </span>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
     
-    <button class="as-btn as-btn-primary" onclick="openAddModal()">
+    <button type="button" class="as-btn as-btn-primary" onclick="openAddModal()">
         <i class="fa fa-plus"></i> _(Add Server)_
     </button>
 </div>
@@ -284,7 +310,7 @@ if ($cfg['DISPLAY_WIDGET'] === '0' && file_exists($pluginPath . 'ActiveStreams.p
             <input type="hidden" id="editIndex" value="-1">
             
             <div class="as-form-row">
-                <label>_(Server Type)_:</label>
+                <label for="serverType">_(Server Type)_:</label>
                 <select id="serverType" onchange="updateFormFields()">
                     <option value="plex">Plex</option>
                     <option value="emby">Emby</option>
@@ -293,24 +319,24 @@ if ($cfg['DISPLAY_WIDGET'] === '0' && file_exists($pluginPath . 'ActiveStreams.p
             </div>
             
             <div class="as-form-row">
-                <label>_(Display Name)_:</label>
+                <label for="serverName">_(Display Name)_:</label>
                 <input type="text" id="serverName" placeholder="My Plex Server" required>
                 <div class="hint">_(A friendly name to identify this server)_</div>
             </div>
             
             <div class="as-form-row">
-                <label>_(Host IP/Hostname)_:</label>
+                <label for="serverHost">_(Host IP/Hostname)_:</label>
                 <input type="text" id="serverHost" placeholder="192.168.1.50" required>
             </div>
             
             <div class="as-form-row">
-                <label>_(Port)_:</label>
+                <label for="serverPort">_(Port)_:</label>
                 <input type="number" id="serverPort" placeholder="32400">
                 <div class="hint" id="portHint">_(Default: 32400 for Plex)_</div>
             </div>
             
             <div class="as-form-row">
-                <label id="tokenLabel">_(Plex Token)_:</label>
+                <label for="serverToken" id="tokenLabel">_(Plex Token)_:</label>
                 <input type="password" id="serverToken" placeholder="Enter your token/API key" required>
                 <div class="hint" id="tokenHint">_(Find your X-Plex-Token in browser dev tools or Plex settings)_</div>
             </div>
@@ -330,7 +356,7 @@ if ($cfg['DISPLAY_WIDGET'] === '0' && file_exists($pluginPath . 'ActiveStreams.p
                 <button type="submit" class="as-btn as-btn-primary">
                     <i class="fa fa-save"></i> _(Save Server)_
                 </button>
-                <button type="button" class="as-btn" style="background: #444; color: #ccc;" onclick="closeModal()">
+                <button type="button" class="as-btn as-btn-secondary" onclick="closeModal()">
                     _(Cancel)_
                 </button>
             </div>
@@ -340,6 +366,14 @@ if ($cfg['DISPLAY_WIDGET'] === '0' && file_exists($pluginPath . 'ActiveStreams.p
 
 <script>
 var servers = <?php echo json_encode($servers); ?>;
+
+// Get computed background color from body and apply to modal
+$(function() {
+    var bgColor = getComputedStyle(document.body).backgroundColor;
+    if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)') {
+        $('.as-modal-content').css('background-color', bgColor);
+    }
+});
 
 function updateFormFields() {
     var type = $('#serverType').val();
