@@ -3,11 +3,11 @@ name: Build Plugin Release
 on:
   push:
     tags:
-      - '*'  # Triggers on any tag push like "2026.01.07"
-  workflow_dispatch:  # Allows manual trigger from GitHub UI
+      - '*'
+  workflow_dispatch:
     inputs:
       version:
-        description: 'Version number (e.g., 2026.01.07)'
+        description: 'Version number (e.g., 2026.01.08)'
         required: true
 
 jobs:
@@ -17,20 +17,34 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
       - name: Determine version
         id: version
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+            VERSION="${{ github.event.inputs.version }}"
           else
-            # Extract version from tag (removes 'v' prefix if present)
-            VERSION=${GITHUB_REF#refs/tags/}
-            VERSION=${VERSION#v}
-            echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+            VERSION="${GITHUB_REF#refs/tags/}"
+            VERSION="${VERSION#v}"
           fi
+          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Using version: ${VERSION}"
+      
+      - name: List repository contents
+        run: |
+          echo "=== Repository root ==="
+          ls -la
+          echo ""
+          echo "=== src/ directory ==="
+          ls -la src/ || echo "src/ directory not found!"
+          echo ""
+          echo "=== metadata/ directory ==="
+          ls -la metadata/ || echo "metadata/ directory not found!"
       
       - name: Build txz package
+        id: build
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
           PLUGIN_NAME="activestreams"
@@ -45,16 +59,62 @@ jobs:
           PLUGIN_DIR="${TEMP_DIR}/usr/local/emhttp/plugins/${PLUGIN_NAME}"
           mkdir -p "${PLUGIN_DIR}"
           
-          # Copy source files
-          cp src/*.page "${PLUGIN_DIR}/"
-          cp src/*.php "${PLUGIN_DIR}/"
-          cp metadata/*.png "${PLUGIN_DIR}/"
+          echo "Created temp directory: ${TEMP_DIR}"
+          echo "Plugin directory: ${PLUGIN_DIR}"
+          
+          # Copy source files with error checking
+          echo "Copying .page files..."
+          if ls src/*.page 1> /dev/null 2>&1; then
+            cp src/*.page "${PLUGIN_DIR}/"
+            echo "  Copied .page files"
+          else
+            echo "  WARNING: No .page files found in src/"
+          fi
+          
+          echo "Copying .php files..."
+          if ls src/*.php 1> /dev/null 2>&1; then
+            cp src/*.php "${PLUGIN_DIR}/"
+            echo "  Copied .php files"
+          else
+            echo "  WARNING: No .php files found in src/"
+          fi
+          
+          echo "Copying .png files..."
+          if ls metadata/*.png 1> /dev/null 2>&1; then
+            cp metadata/*.png "${PLUGIN_DIR}/"
+            echo "  Copied .png files"
+          else
+            echo "  WARNING: No .png files found in metadata/"
+          fi
+          
+          # Show what we're packaging
+          echo ""
+          echo "=== Files to be packaged ==="
+          find "${TEMP_DIR}" -type f
+          
+          # Check if we have any files to package
+          FILE_COUNT=$(find "${PLUGIN_DIR}" -type f | wc -l)
+          if [ "$FILE_COUNT" -eq 0 ]; then
+            echo "ERROR: No files to package!"
+            exit 1
+          fi
           
           # Create txz archive
           ARCHIVE_NAME="${PLUGIN_NAME}-${VERSION}.txz"
+          echo ""
+          echo "Creating archive: ${ARCHIVE_NAME}"
+          
           cd "${TEMP_DIR}"
           tar -cJf "${GITHUB_WORKSPACE}/archive/${ARCHIVE_NAME}" .
           cd "${GITHUB_WORKSPACE}"
+          
+          # Verify archive was created
+          if [ ! -f "archive/${ARCHIVE_NAME}" ]; then
+            echo "ERROR: Failed to create archive!"
+            exit 1
+          fi
+          
+          echo "Archive created successfully: $(ls -lh archive/${ARCHIVE_NAME})"
           
           # Generate MD5
           MD5_HASH=$(md5sum "archive/${ARCHIVE_NAME}" | awk '{print $1}')
@@ -64,9 +124,12 @@ jobs:
           echo "ARCHIVE_NAME=${ARCHIVE_NAME}" >> $GITHUB_ENV
           echo "MD5_HASH=${MD5_HASH}" >> $GITHUB_ENV
           
+          echo ""
+          echo "=========================================="
           echo "Build complete!"
           echo "Archive: archive/${ARCHIVE_NAME}"
           echo "MD5: ${MD5_HASH}"
+          echo "=========================================="
           
           # Clean up
           rm -rf "${TEMP_DIR}"
@@ -75,21 +138,39 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
           
+          echo "Updating activestreams.plg..."
+          echo "  Version: ${VERSION}"
+          echo "  MD5: ${MD5_HASH}"
+          
+          # Show current values
+          echo ""
+          echo "Current values in plg file:"
+          grep -E 'ENTITY (version|md5)' activestreams.plg || true
+          
           # Update version in plg file
-          sed -i "s/<!ENTITY version.*\".*\"/<!ENTITY version   \"${VERSION}\"/" activestreams.plg
+          sed -i 's/<!ENTITY version[[:space:]]*"[^"]*"/<!ENTITY version   "'"${VERSION}"'"/' activestreams.plg
           
           # Update MD5 in plg file
-          sed -i "s/<!ENTITY md5.*\".*\"/<!ENTITY md5       \"${MD5_HASH}\"/" activestreams.plg
+          sed -i 's/<!ENTITY md5[[:space:]]*"[^"]*"/<!ENTITY md5       "'"${MD5_HASH}"'"/' activestreams.plg
           
-          echo "Updated activestreams.plg:"
-          grep -E "ENTITY (version|md5)" activestreams.plg
+          echo ""
+          echo "Updated values in plg file:"
+          grep -E 'ENTITY (version|md5)' activestreams.plg
       
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          
+          # Check for changes
+          git status
+          
           git add archive/ activestreams.plg
-          git commit -m "Build version ${{ steps.version.outputs.VERSION }}" || echo "No changes to commit"
+          
+          # Commit (don't fail if no changes)
+          git diff --staged --quiet && echo "No changes to commit" || git commit -m "Build version ${{ steps.version.outputs.VERSION }}"
+          
+          # Push changes
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
