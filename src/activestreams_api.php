@@ -436,7 +436,7 @@ if (empty($allStreams)) {
         $typeColor = $typeColors[$serverType] ?? '#888';
         
         // LAN/WAN icon (fa-network-wired requires FA5+, falls back gracefully)
-        $locationIcon = $s['is_local'] ? 'fa-network-wired' : 'fa-globe';
+        $locationIcon = $s['is_local'] ? 'fa-home' : 'fa-cloud';
         $locationTitle = $s['is_local'] ? 'Local (LAN)' : 'Remote (WAN)';
         if (!empty($s['client_ip'])) {
             $locationTitle .= ' - ' . htmlspecialchars($s['client_ip']);
@@ -448,7 +448,7 @@ if (empty($allStreams)) {
             $transcodeTooltip = !empty($s['transcode_details']) 
                 ? htmlspecialchars(implode(" | ", $s['transcode_details'])) 
                 : 'Transcoding';
-            $transcodeHtml = " <i class='fa fa-microchip' style='color:#e5a00d; cursor:help;' title='$transcodeTooltip'></i>";
+            $transcodeHtml = " <i class='fa fa-random' style='color:#e5a00d; cursor:help;' title='$transcodeTooltip'></i>";
         }
         
         echo "<div class='as-row'>";
