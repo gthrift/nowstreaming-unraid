@@ -1,12 +1,12 @@
 <?php
 /**
- * Active Streams - Server Management API
+ * Now Streaming - Server Management API
  * Handles adding, editing, deleting, and testing media server connections
  */
 
 header('Content-Type: application/json');
 
-$servers_file = "/boot/config/plugins/activestreams/servers.json";
+$servers_file = "/boot/config/plugins/nowstreaming/servers.json";
 
 // Load existing servers
 function loadServers() {
