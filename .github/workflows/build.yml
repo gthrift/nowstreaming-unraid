@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version number (e.g., 2026.01.08)'
+        description: 'Version number (e.g., 2026.01.09)'
         required: true
       release_notes:
         description: 'Release notes (use \n for new lines)'
@@ -40,7 +40,7 @@ jobs:
         id: build
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
-          PLUGIN_NAME="activestreams"
+          PLUGIN_NAME="nowstreaming"
           
           echo "Building ${PLUGIN_NAME} version ${VERSION}..."
           
@@ -132,15 +132,15 @@ jobs:
           VERSION="${{ steps.version.outputs.VERSION }}"
           RELEASE_NOTES="${{ github.event.inputs.release_notes }}"
           
-          echo "Updating activestreams.plg..."
+          echo "Updating nowstreaming.plg..."
           echo "  Version: ${VERSION}"
           echo "  MD5: ${MD5_HASH}"
           
           # Update version in plg file
-          sed -i 's/<!ENTITY version[[:space:]]*"[^"]*"/<!ENTITY version   "'"${VERSION}"'"/' activestreams.plg
+          sed -i 's/<!ENTITY version[[:space:]]*"[^"]*"/<!ENTITY version   "'"${VERSION}"'"/' nowstreaming.plg
           
           # Update MD5 in plg file
-          sed -i 's/<!ENTITY md5[[:space:]]*"[^"]*"/<!ENTITY md5       "'"${MD5_HASH}"'"/' activestreams.plg
+          sed -i 's/<!ENTITY md5[[:space:]]*"[^"]*"/<!ENTITY md5       "'"${MD5_HASH}"'"/' nowstreaming.plg
           
           # Add release notes if provided (for manual triggers only)
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${RELEASE_NOTES}" ]; then
@@ -153,21 +153,21 @@ jobs:
             NEW_ENTRY="###${VERSION}\n${FORMATTED_NOTES}\n\n"
             
             # Insert after <CHANGES> tag
-            sed -i "s|<CHANGES>|<CHANGES>\n${NEW_ENTRY}|" activestreams.plg
+            sed -i "s|<CHANGES>|<CHANGES>\n${NEW_ENTRY}|" nowstreaming.plg
             
             echo "  Release notes added"
           fi
           
           echo ""
           echo "Updated plg file:"
-          grep -A 5 "<CHANGES>" activestreams.plg | head -10
+          grep -A 5 "<CHANGES>" nowstreaming.plg | head -10
       
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
-          git add archive/ activestreams.plg
+          git add archive/ nowstreaming.plg
           
           # Commit (don't fail if no changes)
           git diff --staged --quiet && echo "No changes to commit" || git commit -m "Build version ${{ steps.version.outputs.VERSION }}"
@@ -183,15 +183,15 @@ jobs:
         with:
           files: |
             archive/${{ env.ARCHIVE_NAME }}
-            archive/activestreams-${{ steps.version.outputs.VERSION }}.md5
+            archive/nowstreaming-${{ steps.version.outputs.VERSION }}.md5
           body: |
-            ## Active Streams v${{ steps.version.outputs.VERSION }}
+            ## Now Streaming v${{ steps.version.outputs.VERSION }}
             
             **MD5:** `${{ env.MD5_HASH }}`
             
             ### Installation
             ```
-            https://raw.githubusercontent.com/gthrift/activestreams-unraid/main/activestreams.plg
+            [https://raw.githubusercontent.com/gthrift/nowstreaming-unraid/main/nowstreaming.plg](https://raw.githubusercontent.com/gthrift/nowstreaming-unraid/main/nowstreaming.plg)
             ```
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
