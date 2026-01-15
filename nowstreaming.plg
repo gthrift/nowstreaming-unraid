@@ -17,16 +17,12 @@
         version="&version;" 
         launch="&launch;" 
         pluginURL="&pluginURL;"
-        support="https://forums.unraid.net/topic/196336-plugin-now-streaming/"
+        support="https://forums.unraid.net/topic/196336-plugin-now-streaming-display-your-active-embyjellyfinplex-streams-on-your-dashboard/"
         IconFA="film"
         icon="streams.png" 
         min="6.12.0">
 
 <CHANGES>
-###2026.01.03
-- Bug fixes and improvements
-
-
 ###2026.01.03
 - Renamed plugin to "Now Streaming"
 - Migrated settings from Active Streams
