@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "nowstreaming">
 <!ENTITY author    "gthrift">
-<!ENTITY version   "2026.01.03">
-<!ENTITY md5       "57dadc289054ad31bb20e61ba2997129">
+<!ENTITY version   "2026.01.02">
+<!ENTITY md5       "YOUR_NEW_MD5_HERE">
 <!ENTITY launch    "Settings/NowStreamingSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/gthrift/nowstreaming-unraid/main">
 <!ENTITY pluginURL "&gitURL;/nowstreaming.plg">
@@ -23,10 +23,6 @@
         min="6.12.0">
 
 <CHANGES>
-###2026.01.03
-- Renamed plugin to "Now Streaming"
-- Migrated settings from Active Streams
-- Internal path updates
 
 ###2026.01.02
 - Bug fixes and improvements
@@ -50,33 +46,32 @@ mkdir -p "&plgPATH;"
 
 # 2. MIGRATION: Check for old Active Streams config and migrate if new config doesn't exist
 if [ -d "/boot/config/plugins/activestreams" ]; then
-    if [ ! -f "&plgPATH;/servers.json" ] && [ -f "/boot/config/plugins/activestreams/servers.json" ]; then
+    if [ ! -f "&plgPATH;/servers.json" ] &amp;&amp; [ -f "/boot/config/plugins/activestreams/servers.json" ]; then
         echo "Migrating servers from Active Streams..."
         cp "/boot/config/plugins/activestreams/servers.json" "&plgPATH;/servers.json"
     fi
-    if [ ! -f "&plgPATH;/nowstreaming.cfg" ] && [ -f "/boot/config/plugins/activestreams/activestreams.cfg" ]; then
+    if [ ! -f "&plgPATH;/nowstreaming.cfg" ] &amp;&amp; [ -f "/boot/config/plugins/activestreams/activestreams.cfg" ]; then
         echo "Migrating settings from Active Streams..."
         cp "/boot/config/plugins/activestreams/activestreams.cfg" "&plgPATH;/nowstreaming.cfg"
-        # Update internal variable name in config if necessary, or just rely on defaults
     fi
 fi
 
 # 3. Set Default Config if missing
 if [ ! -f "&plgPATH;/nowstreaming.cfg" ]; then
-    echo "POLL_INTERVAL='5'" > "&plgPATH;/nowstreaming.cfg"
-    echo "DISPLAY_WIDGET='1'" >> "&plgPATH;/nowstreaming.cfg"
-    echo "WIDGET_ICON='streams'" >> "&plgPATH;/nowstreaming.cfg"
-    echo "WIDGET_TITLE='Now Streaming'" >> "&plgPATH;/nowstreaming.cfg"
+    echo "POLL_INTERVAL='5'" &gt; "&plgPATH;/nowstreaming.cfg"
+    echo "DISPLAY_WIDGET='1'" &gt;&gt; "&plgPATH;/nowstreaming.cfg"
+    echo "WIDGET_ICON='streams'" &gt;&gt; "&plgPATH;/nowstreaming.cfg"
+    echo "WIDGET_TITLE='Now Streaming'" &gt;&gt; "&plgPATH;/nowstreaming.cfg"
 fi
 
 # 4. Create empty servers config if missing
 if [ ! -f "&plgPATH;/servers.json" ]; then
-    echo "[]" > "&plgPATH;/servers.json"
+    echo "[]" &gt; "&plgPATH;/servers.json"
 fi
 
 # 5. Fix Permissions
 chmod -R 755 "&emhttp;"
-chmod -R 644 "&emhttp;"/*.php "&emhttp;"/*.page "&emhttp;"/*.png 2>/dev/null
+chmod -R 644 "&emhttp;"/*.php "&emhttp;"/*.page "&emhttp;"/*.png 2&gt;/dev/null
 chmod -R 755 "&plgPATH;"
 
 # 6. TOGGLE LOGIC
@@ -116,7 +111,7 @@ echo ""
 echo "Uninstalling &name;..."
 
 # Remove Plugin Package
-removepkg "&plgPATH;/&name;-&version;.txz" 2>/dev/null
+removepkg "&plgPATH;/&name;-&version;.txz" 2&gt;/dev/null
 
 # Remove Plugin Files
 rm -rf "&emhttp;"
