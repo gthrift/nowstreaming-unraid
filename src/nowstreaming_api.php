@@ -1,13 +1,13 @@
 <?php
 /**
- * Active Streams - Stream Fetching API
+ * Now Streaming - Stream Fetching API
  * Fetches and aggregates active streams from all configured media servers
  */
 
 error_reporting(0);
 
-$cfg_file = "/boot/config/plugins/activestreams/activestreams.cfg";
-$servers_file = "/boot/config/plugins/activestreams/servers.json";
+$cfg_file = "/boot/config/plugins/nowstreaming/nowstreaming.cfg";
+$servers_file = "/boot/config/plugins/nowstreaming/servers.json";
 
 // Load configuration
 if (!file_exists($cfg_file)) {
