@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "nowstreaming">
 <!ENTITY author    "gthrift">
-<!ENTITY version   "2026.01.04">
-<!ENTITY md5       "864a3bc2e358f624cee844a38c840a4a">
+<!ENTITY version   "2026.01.03">
+<!ENTITY md5       "c022e4deee62545dc0ba6aed6d982528">
 <!ENTITY launch    "Settings/NowStreamingSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/gthrift/nowstreaming-unraid/main">
 <!ENTITY pluginURL "&gitURL;/nowstreaming.plg">
@@ -23,10 +23,6 @@
         min="6.12.0">
 
 <CHANGES>
-###2026.01.04
-- Fix bad build
-
-
 ###2026.01.03
 - Change name to Now Streaming
 
@@ -66,7 +62,7 @@ fi
 # 3. Set Default Config if missing
 if [ ! -f "&plgPATH;/nowstreaming.cfg" ]; then
     echo "POLL_INTERVAL='5'" &gt; "&plgPATH;/nowstreaming.cfg"
-    echo "DISPLAY_WIDGET=\"1\"" &gt;&gt; "&plgPATH;/nowstreaming.cfg"
+    echo "DISPLAY_WIDGET='1'" &gt;&gt; "&plgPATH;/nowstreaming.cfg"
     echo "WIDGET_ICON='streams'" &gt;&gt; "&plgPATH;/nowstreaming.cfg"
     echo "WIDGET_TITLE='Now Streaming'" &gt;&gt; "&plgPATH;/nowstreaming.cfg"
 fi
