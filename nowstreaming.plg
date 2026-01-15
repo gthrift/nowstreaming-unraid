@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "nowstreaming">
 <!ENTITY author    "gthrift">
-<!ENTITY version   "2026.01.06">
-<!ENTITY md5       "e7d1ab18801cc404cb34349c8892a7fe">
+<!ENTITY version   "2026.01.02">
+<!ENTITY md5       "450f1c319e9994cb82eed792e565de83">
 <!ENTITY launch    "Settings/NowStreamingSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/gthrift/nowstreaming-unraid/main">
 <!ENTITY pluginURL "&gitURL;/nowstreaming.plg">
@@ -12,27 +12,20 @@
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
 ]>
 
-<PLUGIN name="&name;"
+<PLUGIN name="&name;" 
         author="&author;" 
         version="&version;" 
         launch="&launch;" 
         pluginURL="&pluginURL;"
-        support="https://forums.unraid.net/topic/196336-plugin-now-streaming-display-your-active-embyjellyfinplex-streams-on-your-dashboard/"
+        support="https://forums.unraid.net/topic/196336-plugin-active-streams-display-your-active-embyjellyfinplex-streams-on-your-dashboard/"
         IconFA="film"
         icon="streams.png" 
         min="6.12.0">
 
 <CHANGES>
-###2026.01.06
-- Fixes
-
-
-###2026.01.03
-- Change name to Now Streaming
-
-
 ###2026.01.02
 - Bug fixes and improvements
+
 
 ###2026.01.01
 - Initial Release
@@ -42,28 +35,19 @@
 A plugin to create a dashboard widget that shows your active streams from Plex, Emby, and Jellyfin servers
 </OVERVIEW>
 
+<!-- Download and install the plugin package -->
 <FILE Name="&plgPATH;/&name;-&version;.txz" Run="upgradepkg --install-new">
 <URL>&archive;</URL>
+<MD5>&md5;</MD5>
 </FILE>
 
+<!-- Post-installation script -->
 <FILE Run="/bin/bash">
 <INLINE>
 # 1. Create Config Directory
 mkdir -p "&plgPATH;"
 
-# 2. MIGRATION: Check for old Active Streams config and migrate if new config doesn't exist
-if [ -d "/boot/config/plugins/activestreams" ]; then
-    if [ ! -f "&plgPATH;/servers.json" ] &amp;&amp; [ -f "/boot/config/plugins/activestreams/servers.json" ]; then
-        echo "Migrating servers from Active Streams..."
-        cp "/boot/config/plugins/activestreams/servers.json" "&plgPATH;/servers.json"
-    fi
-    if [ ! -f "&plgPATH;/nowstreaming.cfg" ] &amp;&amp; [ -f "/boot/config/plugins/activestreams/activestreams.cfg" ]; then
-        echo "Migrating settings from Active Streams..."
-        cp "/boot/config/plugins/activestreams/activestreams.cfg" "&plgPATH;/nowstreaming.cfg"
-    fi
-fi
-
-# 3. Set Default Config if missing
+# 2. Set Default Config if missing
 if [ ! -f "&plgPATH;/nowstreaming.cfg" ]; then
     echo "POLL_INTERVAL='5'" &gt; "&plgPATH;/nowstreaming.cfg"
     echo "DISPLAY_WIDGET='1'" &gt;&gt; "&plgPATH;/nowstreaming.cfg"
@@ -71,17 +55,17 @@ if [ ! -f "&plgPATH;/nowstreaming.cfg" ]; then
     echo "WIDGET_TITLE='Now Streaming'" &gt;&gt; "&plgPATH;/nowstreaming.cfg"
 fi
 
-# 4. Create empty servers config if missing
+# 3. Create empty servers config if missing
 if [ ! -f "&plgPATH;/servers.json" ]; then
     echo "[]" &gt; "&plgPATH;/servers.json"
 fi
 
-# 5. Fix Permissions
+# 4. Fix Permissions
 chmod -R 755 "&emhttp;"
-chmod -R 644 "&emhttp;"/*.php "&emhttp;"/*.page "&emhttp;"/*.png 2&gt;/dev/null
+chmod -R 644 "&emhttp;"/*.php "&emhttp;"/*.page "&emhttp;"/*.png 2>/dev/null
 chmod -R 755 "&plgPATH;"
 
-# 6. TOGGLE LOGIC
+# 5. TOGGLE LOGIC
 CFG_FILE="&plgPATH;/nowstreaming.cfg"
 WIDGET_FILE="&emhttp;/NowStreaming.page"
 
@@ -113,15 +97,18 @@ echo ""
 </INLINE>
 </FILE>
 
+<!-- Uninstall script -->
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
 echo "Uninstalling &name;..."
 
 # Remove Plugin Package
-removepkg "&plgPATH;/&name;-&version;.txz" 2&gt;/dev/null
+removepkg "&plgPATH;/&name;-&version;.txz" 2>/dev/null
 
-# Remove Plugin Files
+# Remove Plugin Files (in case removepkg didn't clean up)
 rm -rf "&emhttp;"
+
+# Remove downloaded package
 rm -f "&plgPATH;/&name;-*.txz"
 
 echo ""
