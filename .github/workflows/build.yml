@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version number (e.g., 2026.01.09)'
+        description: 'Version number (e.g., 2026.01.08)'
         required: true
       release_notes:
         description: 'Release notes (use \n for new lines)'
@@ -191,7 +191,7 @@ jobs:
             
             ### Installation
             ```
-            [https://raw.githubusercontent.com/gthrift/nowstreaming-unraid/main/nowstreaming.plg](https://raw.githubusercontent.com/gthrift/nowstreaming-unraid/main/nowstreaming.plg)
+            https://raw.githubusercontent.com/gthrift/nowstreaming-unraid/main/nowstreaming.plg
             ```
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
