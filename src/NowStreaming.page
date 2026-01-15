@@ -1,4 +1,4 @@
-Menu="Dashboard"
+Menu="Dashboard:0"
 Title="Now Streaming"
 Icon="streams.png"
 Cond="parse_ini_file('/boot/config/plugins/nowstreaming/nowstreaming.cfg')['DISPLAY_WIDGET'] == '1'"
