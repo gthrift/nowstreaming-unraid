@@ -1,6 +1,6 @@
-# Active Streams Widget for Unraid
+# Now Streaming Widget for Unraid
 
-Active Streams is a lightweight Unraid plugin that adds a real-time dashboard widget to monitor active media streams from **Plex**, **Emby**, and **Jellyfin** servers directly from your Unraid WebGUI.
+Now Streaming is a lightweight Unraid plugin that adds a real-time dashboard widget to monitor active media streams from **Plex**, **Emby**, and **Jellyfin** servers directly from your Unraid WebGUI.
 
 Support my work on [PayPal.me](https://www.paypal.me/gthrift385)
 
@@ -44,11 +44,11 @@ This project is an unofficial community plugin and is not affiliated with, endor
 
 ## Configuration
 
-After installation, navigate to **Settings > Active Streams Settings** to configure:
+After installation, navigate to **Settings > Now Streaming Settings** to configure:
 
 ### General Settings
 
-- **Widget Title**: Choose from "Active Streams", "Video Streams", "Plex Streams", "Emby Streams", or "Jellyfin Streams"
+- **Widget Title**: Choose from "Now Streaming", "Video Streams", "Plex Streams", "Emby Streams", or "Jellyfin Streams"
 - **Widget Icon**: Select Plex, Emby, Jellyfin, or a generic film icon
 - **Refresh Interval**: How often to poll servers (1-60 seconds)
 - **Display Dashboard Widget**: Toggle widget visibility
