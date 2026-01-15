@@ -169,7 +169,7 @@ EOT;
 ?>
 
 <script>
-    var asPollInterval = <?=$poll_interval;?>;
+    var nsPollInterval = <?=$poll_interval;?>;
     
     function updateNowStreamingDashboard() {
         $.get("/plugins/nowstreaming/nowstreaming_api.php", function(data) {
@@ -191,6 +191,6 @@ EOT;
 
     $(function() {
         updateNowStreamingDashboard();
-        setInterval(updateNowStreamingDashboard, asPollInterval);
+        setInterval(updateNowStreamingDashboard, nsPollInterval);
     });
 </script>

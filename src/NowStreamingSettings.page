@@ -16,13 +16,13 @@ Markdown="false"
 <style>
     /* Section styling - uses transparent overlays to work with any theme */
     .as-section { 
-        margin-bottom: 30px;
+        margin-bottom: 30px; 
         padding: 20px; 
         background: rgba(128,128,128,0.1); 
         border-radius: 8px; 
     }
     .as-section h3 { 
-        margin-top: 0;
+        margin-top: 0; 
         border-bottom: 1px solid rgba(128,128,128,0.2); 
         padding-bottom: 10px; 
     }
@@ -31,7 +31,7 @@ Markdown="false"
     .as-server-list { margin: 15px 0; }
     .as-server-item { 
         display: flex; 
-        align-items: center;
+        align-items: center; 
         padding: 10px 15px; 
         margin: 5px 0; 
         background: rgba(128,128,128,0.1); 
@@ -40,55 +40,61 @@ Markdown="false"
     }
     .as-server-item .server-type { 
         font-weight: bold; 
-        width: 80px;
+        width: 80px; 
         text-transform: capitalize;
     }
     .as-server-item .server-name { flex: 1; }
     .as-server-item .server-host { opacity: 0.7; flex: 1; }
     .as-server-item .server-actions { display: flex; gap: 10px; }
     
-    /* Buttons */
+    /* Buttons - inherit from Unraid's button styling */
     .as-btn { 
-        padding: 8px 16px;
+        padding: 8px 16px; 
         cursor: pointer; 
         border-radius: 4px;
         border: 1px solid;
         font-weight: normal;
     }
     .as-btn-primary { 
-        background: #ff9800;
+        background: #ff9800; 
         color: #000; 
         border-color: #ff9800;
     }
-    .as-btn-primary:hover { background: #ffaa2e; }
+    .as-btn-primary:hover {
+        background: #ffaa2e;
+    }
     .as-btn-danger { 
         background: #c53a3a; 
         color: #fff; 
         border-color: #c53a3a;
     }
-    .as-btn-danger:hover { background: #d54a4a; }
+    .as-btn-danger:hover {
+        background: #d54a4a;
+    }
     .as-btn-secondary { 
         background: rgba(128,128,128,0.3); 
         color: inherit; 
         border-color: rgba(128,128,128,0.5);
     }
-    .as-btn-secondary:hover { background: rgba(128,128,128,0.4); }
+    .as-btn-secondary:hover {
+        background: rgba(128,128,128,0.4);
+    }
     
     /* Modal Overlay */
     .as-modal { 
-        display: none;
+        display: none; 
         position: fixed; 
         top: 0; 
         left: 0; 
         width: 100%; 
         height: 100%; 
         background: rgba(0,0,0,0.7); 
-        z-index: 1000;
+        z-index: 1000; 
     }
     
-    /* Modal Content */
+    /* Modal Content - inherit background from body */
     .as-modal-content { 
-        position: absolute;
+        position: absolute; 
         top: 50%; 
         left: 50%; 
         transform: translate(-50%, -50%); 
@@ -114,57 +120,65 @@ Markdown="false"
     .as-form-row { margin: 18px 0; }
     .as-form-row > label { 
         display: block; 
-        margin-bottom: 8px;
+        margin-bottom: 8px; 
         font-weight: bold; 
         font-size: 14px;
     }
     
+    /* 
+     * Input Fields - Let Unraid's default styles apply, just ensure sizing
+     * Unraid already styles input, select elements based on theme
+     */
     .as-modal-content input[type="text"],
     .as-modal-content input[type="number"],
     .as-modal-content input[type="password"],
     .as-modal-content select {
-        width: 100%;
+        width: 100%; 
         padding: 8px 10px; 
         box-sizing: border-box;
         font-size: 14px;
     }
     
+    /* Checkbox styling */
     .as-modal-content input[type="checkbox"] {
         width: auto;
         margin-right: 8px;
     }
     
     .as-form-row .hint { 
-        font-size: 12px;
+        font-size: 12px; 
         opacity: 0.6;
         margin-top: 6px;
         line-height: 1.4;
     }
     
+    /* Server Type Colors - these are brand colors, keep them */
     .type-plex { color: #e5a00d; }
     .type-emby { color: #52b54b; }
     .type-jellyfin { color: #00a4dc; }
     
+    /* Test Result Box */
     .as-test-result { 
-        margin-top: 15px;
+        margin-top: 15px; 
         padding: 12px 15px; 
         border-radius: 4px; 
         display: none;
         font-size: 14px;
     }
     .as-test-success { 
-        background: rgba(82, 181, 75, 0.2);
+        background: rgba(82, 181, 75, 0.2); 
         color: #5cb85c;
         border: 1px solid rgba(82, 181, 75, 0.4);
     }
     .as-test-error { 
-        background: rgba(217, 83, 79, 0.2);
+        background: rgba(217, 83, 79, 0.2); 
         color: #d9534f;
         border: 1px solid rgba(217, 83, 79, 0.4);
     }
     
+    /* Button Row */
     .as-modal-buttons {
-        display: flex;
+        display: flex; 
         gap: 10px; 
         margin-top: 25px;
         padding-top: 20px;
@@ -176,6 +190,7 @@ Markdown="false"
         font-size: 14px;
     }
     
+    /* Checkbox row */
     .as-checkbox-row {
         display: flex;
         align-items: center;
@@ -215,6 +230,7 @@ if ($cfg['DISPLAY_WIDGET'] === '0' && file_exists($pluginPath . 'NowStreaming.pa
 }
 ?>
 
+<!-- General Settings Section -->
 <div class="as-section">
     <h3><i class="fa fa-cog"></i> _(General Settings)_</h3>
     <form name="nowstreaming_settings" id="nowstreaming_settings" method="POST" action="/update.php" target="progressFrame">
@@ -257,6 +273,7 @@ if ($cfg['DISPLAY_WIDGET'] === '0' && file_exists($pluginPath . 'NowStreaming.pa
     </form>
 </div>
 
+<!-- Server Management Section -->
 <div class="as-section">
     <h3><i class="fa fa-server"></i> _(Media Servers)_</h3>
     <p>_(Configure your Plex, Emby, and Jellyfin servers below.)_</p>
@@ -289,6 +306,7 @@ if ($cfg['DISPLAY_WIDGET'] === '0' && file_exists($pluginPath . 'NowStreaming.pa
     </button>
 </div>
 
+<!-- Add/Edit Server Modal -->
 <div class="as-modal" id="serverModal">
     <div class="as-modal-content">
         <h3 id="modalTitle"><i class="fa fa-server"></i> _(Add Server)_</h3>
@@ -353,6 +371,7 @@ if ($cfg['DISPLAY_WIDGET'] === '0' && file_exists($pluginPath . 'NowStreaming.pa
 <script>
 var servers = <?php echo json_encode($servers); ?>;
 
+// Get computed background color from body and apply to modal
 $(function() {
     var bgColor = getComputedStyle(document.body).backgroundColor;
     if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)') {
@@ -373,6 +392,7 @@ function updateFormFields() {
         emby: '_(Generate in Emby Dashboard > Advanced > API Keys)_',
         jellyfin: '_(Generate in Jellyfin Dashboard > Advanced > API Keys)_'
     };
+    
     $('#serverPort').attr('placeholder', ports[type]);
     $('#portHint').text(hints[type]);
     $('#tokenHint').text(tokenHints[type]);
@@ -434,6 +454,7 @@ function testConnection() {
     };
     
     $('#testResult').removeClass('as-test-success as-test-error').html('<i class="fa fa-spinner fa-spin"></i> _(Testing...)_').show();
+    
     $.post('/plugins/nowstreaming/nowstreaming_servers.php', data, function(response) {
         if (response.success) {
             $('#testResult').removeClass('as-test-error').addClass('as-test-success')
@@ -475,6 +496,7 @@ $('#serverForm').on('submit', function(e) {
     }, 'json');
 });
 
+// Close modal on background click
 $('#serverModal').on('click', function(e) {
     if (e.target === this) closeModal();
 });
