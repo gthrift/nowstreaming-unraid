@@ -1,5 +1,4 @@
 Menu="Dashboard"
-Title="Now Streaming"
 Icon="streams.png"
 Cond="parse_ini_file('/boot/config/plugins/nowstreaming/nowstreaming.cfg')['DISPLAY_WIDGET'] == '1'"
 ---
@@ -195,4 +194,3 @@ EOT;
         setInterval(updateNowStreamingDashboard, asPollInterval);
     });
 </script>
-ENDOFFILE
