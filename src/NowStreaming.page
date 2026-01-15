@@ -1,18 +1,18 @@
 Menu="Dashboard"
 Icon="streams.png"
-Cond="parse_ini_file('/boot/config/plugins/activestreams/activestreams.cfg')['DISPLAY_WIDGET'] == '1'"
+Cond="parse_ini_file('/boot/config/plugins/nowstreaming/nowstreaming.cfg')['DISPLAY_WIDGET'] == '1'"
 ---
 <?php
-    $plugin = "activestreams";
-    $cfg = parse_ini_file("/boot/config/plugins/activestreams/activestreams.cfg");
+    $plugin = "nowstreaming";
+    $cfg = parse_ini_file("/boot/config/plugins/nowstreaming/nowstreaming.cfg");
     $poll_interval = isset($cfg['POLL_INTERVAL']) ? (int)$cfg['POLL_INTERVAL'] * 1000 : 5000;
     
     // Get widget customization
     $widget_icon = $cfg['WIDGET_ICON'] ?? 'streams';
-    $widget_title = $cfg['WIDGET_TITLE'] ?? 'Active Streams';
+    $widget_title = $cfg['WIDGET_TITLE'] ?? 'Now Streaming';
     
     // Map icon to file
-    $icon_file = "/plugins/activestreams/{$widget_icon}.png";
+    $icon_file = "/plugins/nowstreaming/{$widget_icon}.png";
 ?>
 
 <style>
@@ -20,24 +20,21 @@ Cond="parse_ini_file('/boot/config/plugins/activestreams/activestreams.cfg')['DI
 
     /* Base Row Styling */
     .as-row, .as-header-row { 
-        display: flex; 
+        display: flex;
         align-items: center; 
         width: 100%;
         box-sizing: border-box;
     }
     
     .as-row { 
-        border-bottom: 1px solid rgba(255,255,255,0.05); 
+        border-bottom: 1px solid rgba(255,255,255,0.05);
         padding: 6px 0; 
     }
     .as-row:last-child { border-bottom: none; }
     .as-transcode { font-size: 10px; opacity: 0.7; margin-right: 4px; }
 
     /* --- DESKTOP LAYOUT --- */
-    .as-server {
-        width: 20px !important;
-        flex-shrink: 0;
-    }
+    .as-server { width: 20px !important; flex-shrink: 0; }
     
     .as-name { 
         width: 35% !important;
@@ -48,7 +45,7 @@ Cond="parse_ini_file('/boot/config/plugins/activestreams/activestreams.cfg')['DI
     }
 
     .as-device { 
-        width: 20% !important; 
+        width: 20% !important;
         text-align: center !important;
         white-space: nowrap;
         overflow: hidden;
@@ -56,7 +53,7 @@ Cond="parse_ini_file('/boot/config/plugins/activestreams/activestreams.cfg')['DI
     }
 
     .as-user { 
-        width: 15% !important; 
+        width: 15% !important;
         text-align: center !important;
         white-space: nowrap;
         overflow: hidden;
@@ -64,7 +61,7 @@ Cond="parse_ini_file('/boot/config/plugins/activestreams/activestreams.cfg')['DI
     }
 
     .as-time { 
-        width: 25% !important; 
+        width: 25% !important;
         text-align: right !important;
         font-family: monospace;
         font-size: 12px;
@@ -85,18 +82,16 @@ Cond="parse_ini_file('/boot/config/plugins/activestreams/activestreams.cfg')['DI
 
     /* --- MOBILE OVERRIDES (Max Width 600px) --- */
     @media only screen and (max-width: 600px) {
-        .as-device, .as-user { 
-            display: none !important; 
-        }
+        .as-device, .as-user { display: none !important; }
         
         .as-name { 
-            width: auto !important;     
+            width: auto !important;
             flex: 1 1 auto !important;  
             min-width: 0;
         }
         
         .as-time { 
-            width: auto !important;    
+            width: auto !important;
             flex: 0 0 auto !important;  
             margin-left: auto;
             padding-left: 10px;
@@ -116,12 +111,12 @@ $mytiles[$plugin]['column1'] = <<<EOT
             <h3 class='tile-header-main' id='{$plugin}-dashboard-title'>
               _({$widget_title})_
             </h3>
-            <span id="as_count_container"><span id="activestreams_count">0</span> _(Active Stream(s))_</span>
+            <span id="as_count_container"><span id="nowstreaming_count">0</span> _(Active Stream(s))_</span>
           </div>
         </div>
         <div class='tile-header-right'>
           <div class='tile-header-right-controls'>
-            <a id="{$plugin}-settings-button" href="/Settings/ActiveStreamsSettings" title="_(Settings)_">
+            <a id="{$plugin}-settings-button" href="/Settings/NowStreamingSettings" title="_(Settings)_">
               <i class="fa fa-fw fa-cog control"></i>
             </a>
           </div>
@@ -142,7 +137,7 @@ $mytiles[$plugin]['column1'] = <<<EOT
   </tr>
   <tr>
     <td>
-        <div id="activestreams_streams">
+        <div id="nowstreaming_streams">
             <div id="as_retrieving">
                 <p align="center" style="font-style:italic;text-align:center;padding-top:10px;">_(Retrieving Data...)_</p>
             </div>
@@ -171,26 +166,26 @@ EOT;
 <script>
     var asPollInterval = <?=$poll_interval;?>;
     
-    function updateActiveStreamsDashboard() {
-        $.get("/plugins/activestreams/activestreams_api.php", function(data) {
+    function updateNowStreamingDashboard() {
+        $.get("/plugins/nowstreaming/nowstreaming_api.php", function(data) {
             if (data) {
                 // 1. Update list
-                $("#activestreams_streams").html(data);
+                $("#nowstreaming_streams").html(data);
                 
                 // 2. Update count
-                var count = $("#activestreams_streams .as-row").length;
+                var count = $("#nowstreaming_streams .as-row").length;
                 if(data.indexOf("No active streams") !== -1 || 
                    data.indexOf("No servers configured") !== -1 ||
                    data.indexOf("Connection failed") !== -1) { 
                     count = 0; 
                 }
-                $("#activestreams_count").text(count);
+                $("#nowstreaming_count").text(count);
             }
         });
     }
 
     $(function() {
-        updateActiveStreamsDashboard();
-        setInterval(updateActiveStreamsDashboard, asPollInterval);
+        updateNowStreamingDashboard();
+        setInterval(updateNowStreamingDashboard, asPollInterval);
     });
 </script>
