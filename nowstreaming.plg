@@ -12,7 +12,7 @@
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
 ]>
 
-<PLUGIN name="&name;"
+<PLUGIN name="Now Streaming"
         author="&author;" 
         version="&version;" 
         launch="&launch;" 
