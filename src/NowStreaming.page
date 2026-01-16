@@ -1,4 +1,4 @@
-Menu="Dashboard:0"
+Menu="Dashboard"
 Icon="streams.png"
 Cond="parse_ini_file('/boot/config/plugins/activestreams/activestreams.cfg')['DISPLAY_WIDGET'] == '1'"
 ---
