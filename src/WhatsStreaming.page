@@ -9,67 +9,70 @@ Cond="parse_ini_file('/boot/config/plugins/whatsstreaming/whatsstreaming.cfg')['
     
     // Get widget customization
     $widget_icon = $cfg['WIDGET_ICON'] ?? 'streams';
-    $widget_title = $cfg['WIDGET_TITLE'] ?? "What's Streaming?";
+    $widget_title = $cfg['WIDGET_TITLE'] ?? 'What's Streaming;
     
     // Map icon to file
     $icon_file = "/plugins/whatsstreaming/{$widget_icon}.png";
 ?>
 
 <style>
-    .ws-icon-img { width: 32px; height: 32px; }
+    .as-icon-img { width: 32px; height: 32px; }
 
     /* Base Row Styling */
-    .ws-row, .ws-header-row { 
+    .as-row, .as-header-row { 
         display: flex; 
         align-items: center; 
         width: 100%;
         box-sizing: border-box;
     }
     
-    .ws-row { 
+    .as-row { 
         border-bottom: 1px solid rgba(255,255,255,0.05); 
         padding: 6px 0; 
     }
-    .ws-row:last-child { border-bottom: none; }
-    .ws-transcode { font-size: 10px; opacity: 0.7; margin-right: 4px; }
+    .as-row:last-child { border-bottom: none; }
+    .as-transcode { font-size: 10px; opacity: 0.7; margin-right: 4px; }
 
     /* --- DESKTOP LAYOUT --- */
-    .ws-server { width: 20px !important; flex-shrink: 0; }
+    .as-server {
+        width: 20px !important;
+        flex-shrink: 0;
+    }
     
-    .ws-name { 
-        width: 35% !important; 
-        white-space: nowrap; 
-        overflow: hidden; 
-        text-overflow: ellipsis; 
-        padding-right: 10px; 
+    .as-name { 
+        width: 35% !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 10px;
     }
 
-    .ws-device { 
+    .as-device { 
         width: 20% !important; 
-        text-align: center !important; 
-        white-space: nowrap; 
-        overflow: hidden; 
-        text-overflow: ellipsis; 
+        text-align: center !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    .ws-user { 
+    .as-user { 
         width: 15% !important; 
-        text-align: center !important; 
-        white-space: nowrap; 
-        overflow: hidden; 
-        text-overflow: ellipsis; 
+        text-align: center !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    .ws-time { 
+    .as-time { 
         width: 25% !important; 
-        text-align: right !important; 
-        font-family: monospace; 
-        font-size: 12px; 
-        white-space: nowrap; 
+        text-align: right !important;
+        font-family: monospace;
+        font-size: 12px;
+        white-space: nowrap;
     }
 
     /* Header row styling */
-    .ws-header-row {
+    .as-header-row {
         opacity: 0.6;
         font-size: 11px;
         text-transform: uppercase;
@@ -78,13 +81,26 @@ Cond="parse_ini_file('/boot/config/plugins/whatsstreaming/whatsstreaming.cfg')['
         margin-bottom: 5px;
     }
     
-    .ws-header-row .ws-server { visibility: hidden; }
+    .as-header-row .as-server { visibility: hidden; }
 
     /* --- MOBILE OVERRIDES (Max Width 600px) --- */
     @media only screen and (max-width: 600px) {
-        .ws-device, .ws-user { display: none !important; }
-        .ws-name { width: auto !important; flex: 1 1 auto !important; min-width: 0; }
-        .ws-time { width: auto !important; flex: 0 0 auto !important; margin-left: auto; padding-left: 10px; }
+        .as-device, .as-user { 
+            display: none !important; 
+        }
+        
+        .as-name { 
+            width: auto !important;     
+            flex: 1 1 auto !important;  
+            min-width: 0;
+        }
+        
+        .as-time { 
+            width: auto !important;    
+            flex: 0 0 auto !important;  
+            margin-left: auto;
+            padding-left: 10px;
+        }
     }
 </style>
 
@@ -95,10 +111,12 @@ $mytiles[$plugin]['column1'] = <<<EOT
     <td>
       <div class='tile-header' id='{$plugin}-dashboard-card'>
         <div class='tile-header-left'>
-          <img src="{$icon_file}" class="ws-icon-img icon">
+          <img src="{$icon_file}" class="as-icon-img icon">
           <div class='section'>
-            <h3 class='tile-header-main' id='{$plugin}-dashboard-title'>_({$widget_title})_</h3>
-            <span id="ws_count_container"><span id="whatsstreaming_count">0</span> _(Active Stream(s))_</span>
+            <h3 class='tile-header-main' id='{$plugin}-dashboard-title'>
+              _({$widget_title})_
+            </h3>
+            <span id="as_count_container"><span id="activestreams_count">0</span> _(Active Stream(s))_</span>
           </div>
         </div>
         <div class='tile-header-right'>
@@ -113,19 +131,19 @@ $mytiles[$plugin]['column1'] = <<<EOT
   </tr>
   <tr>
     <td>            
-        <div class="ws-header-row">
-            <span class="ws-server"></span>
-            <span class="ws-name">_(Name)_</span>
-            <span class="ws-device">_(Device)_</span>
-            <span class="ws-user">_(User)_</span>
-            <span class="ws-time">_(Progress)_</span>
+        <div class="as-header-row">
+            <span class="as-server"></span>
+            <span class="as-name">_(Name)_</span>
+            <span class="as-device">_(Device)_</span>
+            <span class="as-user">_(User)_</span>
+            <span class="as-time">_(Progress)_</span>
         </div>
     </td>
   </tr>
   <tr>
     <td>
         <div id="whatsstreaming_streams">
-            <div id="ws_retrieving">
+            <div id="as_retrieving">
                 <p align="center" style="font-style:italic;text-align:center;padding-top:10px;">_(Retrieving Data...)_</p>
             </div>
         </div>
@@ -151,7 +169,7 @@ EOT;
 ?>
 
 <script>
-    var wsPollInterval = <?=$poll_interval;?>;
+    var asPollInterval = <?=$poll_interval;?>;
     
     function updateWhatsStreamingDashboard() {
         $.get("/plugins/whatsstreaming/whatsstreaming_api.php", function(data) {
@@ -159,20 +177,20 @@ EOT;
                 // 1. Update list
                 $("#whatsstreaming_streams").html(data);
                 
-                // 2. Update count based on row count
-                var count = $("#whatsstreaming_streams .ws-row").length;
+                // 2. Update count
+                var count = $("#whatsstreaming_streams .as-row").length;
                 if(data.indexOf("No active streams") !== -1 || 
                    data.indexOf("No servers configured") !== -1 ||
                    data.indexOf("Connection failed") !== -1) { 
                     count = 0; 
                 }
-                $("#whatsstreaming_count").text(count);
+                $("#activestreams_count").text(count);
             }
         });
     }
 
     $(function() {
         updateWhatsStreamingDashboard();
-        setInterval(updateWhatsStreamingDashboard, wsPollInterval);
+        setInterval(updateWhatsStreamingDashboard, asPollInterval);
     });
 </script>
