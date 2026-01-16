@@ -1,6 +1,6 @@
-# Now Streaming Widget for Unraid
+# What's Streaming Widget for Unraid
 
-Now Streaming is a lightweight Unraid plugin that adds a real-time dashboard widget to monitor active media streams from **Plex**, **Emby**, and **Jellyfin** servers directly from your Unraid WebGUI.
+What's Streaming is a lightweight Unraid plugin that adds a real-time dashboard widget to monitor active media streams from **Plex**, **Emby**, and **Jellyfin** servers directly from your Unraid WebGUI.
 
 Support my work on [PayPal.me](https://www.paypal.me/gthrift385)
 
@@ -26,7 +26,7 @@ This project is an unofficial community plugin and is not affiliated with, endor
 
 | Dashboard Widget |
 | :--- |
-| ![Dashboard Example](https://raw.githubusercontent.com/gthrift/nowstreaming-unraid/main/metadata/widget_preview.png) |
+| ![Dashboard Example](https://raw.githubusercontent.com/gthrift/whatsstreaming-unraid/main/metadata/widget_preview.png) |
 
 ## Installation
 
